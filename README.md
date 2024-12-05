@@ -1,87 +1,91 @@
----------------------------------------------
-<--< Readme for my DBMS Semester Project >-->
----------------------------------------------
-
+# Readme for my DBMS Semester Project
 Good afternoon! I'm writing this to try and guide you through installing this, should you need me to.
 
+> [!NOTE]
+> If you run into any other issues or have any questions at all, please email me! I'm sorry this project might be a pain in the neck to install, but I've worked really hard on it and would hate it if you could not see the final result.
 
-------------------
-< Important Note >
-------------------
+## Important Note
 If you run into any other issues or have any questions at all, please email me!
 I'm sorry this project might be a pain in the neck to install, but I've worked really hard on it
 and would hate it if you could not see the final result.
 
 
-----------------
-< Dependencies >
-----------------
+# Dependencies
 The main dependencies for this project are:
 
-- PostgresQL
-(https://www.postgresql.org/download/)
+* [PostgresQL](https://www.postgresql.org/download/)
 
-- PHP [this should already be installed on your machine, but here's documentation if not]
-(https://www.php.net/manual/en/install.windows.php)
+* [PHP (this should already be installed on your machine, but here's documentation if not)](https://www.php.net/manual/en/install.windows.php)
 
-- Composer
-(https://getcomposer.org/download/)
+* [Composer](https://getcomposer.org/download/)
 
-- Node.js
-(https://nodejs.org/en)
+* [Node.js](https://nodejs.org/en)
 
-----------------
-< Installation >
-----------------
-1. (*IMPORTANT*) Create a database in postgres to store db info for this project.
+# Installation
+> [!IMPORTANT]
+> 1. Create a database in postgres to store db info for this project.
 
 2. Open your CLI (if you're on Windows, this is either PowerShell or cmd)
 
 3. Navigate to the extracted .zip file or the cloned repo (using cd commands)
 
 4. Run this command to install PHP dependencies:
-    composer install
+
+    `composer install`
 
 5. Run this command to start setting up database environment variables (postgres):
-    cp .env.example .env
 
-6. Look for the line that says DB_CONNECTION=pgsql (this should be line 24).
+   `cp .env.example .env`
 
-7. Replace the info with actually relevant info.
-    - If you haven't configured postgres at all past installing it, the default username AND password are postgres
-    
-    DB_CONNECTION=pgsql
-    DB_HOST=127.0.0.1
-    DB_PORT=5432
-    DB_DATABASE=your_database_name
-    DB_USERNAME=your_username
-    DB_PASSWORD=your_password
+7. Look for the line that says DB_CONNECTION=pgsql (this should be line 24).
 
-8. Make sure postgres is running locally, you created a database (see step 1), and you are using that same database name for the environment variable.
 
-9. Run this command to install JS dependencies:
-    npm install
+> [!IMPORTANT]
+> If you haven't configured postgres at all past installing it, the default username AND password are postgres
 
-10. Laravel needs an application key to be set in order to run, so run this command:
-    php artisan key:generate
 
-11. Run this command to migrate and populate the database:
-    php artisan migrate:fresh --seed
+8. Replace the info with actually relevant info:
+   `DB_CONNECTION=pgsql`
+   
+    `DB_HOST=127.0.0.1`
+   
+    `DB_PORT=5432`
+   
+    `DB_DATABASE=your_database_name`
+   
+    `DB_USERNAME=your_username`
+   
+    `DB_PASSWORD=your_password`
 
-12. Run this command to have Node do its thing for the frontend:
-    npm run build
+11. Make sure postgres is running locally, you created a database (see step 1), and you are using that same database name for the environment variable.
 
-13. Run this command to have Laravel serve the application and start the development server (on localhost by default):
-    php artisan serve
+12. Run this command to install JS dependencies:
 
-14. There is lots of test data that I made to be seeded as I built this. If you need test data generated, run this command:
-    php artisan db:seed
+    `npm install`
 
--------------------
-< Troubleshooting >
--------------------
-- PostgreSQL Error: If you receive an error regarding the database connection, make sure PostgreSQL is running and that the credentials in your .env file are correct.
+13. Laravel needs an application key to be set in order to run, so run this command:
 
-- Composer Not Found: Ensure Composer is properly installed by checking with composer -v.
+    `php artisan key:generate`
 
-- Node.js Issues: If there are issues with Node.js or npm install, try clearing the npm cache or reinstalling Node.js.
+14. Run this command to migrate and populate the database:
+
+    `php artisan migrate:fresh --seed`
+
+16. Run this command to have Node do its thing for the frontend:
+
+    `npm run build`
+
+18. Run this command to have Laravel serve the application and start the development server (on localhost by default):
+
+    `php artisan serve`
+
+20. There is lots of test data that I made to be seeded as I built this. If you need test data generated, run this command:
+
+    `php artisan db:seed`
+
+# Troubleshooting
+* PostgreSQL Error: If you receive an error regarding the database connection, make sure PostgreSQL is running and that the credentials in your .env file are correct.
+
+* Composer Not Found: Ensure Composer is properly installed by checking with composer -v.
+
+* Node.js Issues: If there are issues with Node.js or npm install, try clearing the npm cache or reinstalling Node.js.
