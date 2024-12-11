@@ -22,7 +22,7 @@ class Order extends Model
     public function products()
     {
         return $this->belongsToMany(Product::class, 'order_products', 'order_id', 'product_id')
-            ->withPivot('quantity', 'price'); // Add quantity and price to the pivot data
+            ->withPivot('quantity', 'price');
     }
 
     // Belongs to relationship with User (Customer)

@@ -3,47 +3,50 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Order;
 use App\Models\Product;
+use App\Models\Order;
 use Illuminate\Http\Request;
 
 class CallCenterController extends Controller
 {
-    // Show customer details and the form for creating an order
     public function index()
     {
-        $customers = User::all();  // Get all customers
-        $products = Product::all();    // Get all products available for order
+        $users = User::all();
+        $products = Product::all();
 
-        return view('call-center', compact('customers', 'products'));
+        return view('call-center.index', compact('users', 'products'));
     }
 
-    // Create a new order for a customer
-    public function createOrder(Request $request)
+    public function storeOrder(Request $request)
     {
-        // Validate the request
-        $request->validate([
-            'customer_id' => 'required|exists:customers,id',
-            'product_ids' => 'required|array',
-            'quantities' => 'required|array',
-            'product_ids.*' => 'exists:products,id',
-            'quantities.*' => 'numeric|min:1',
+        $validated = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'products' => 'required|array',
+            'products.*.product_id' => 'required|exists:products,id',
+            'products.*.quantity' => 'required|integer|min:1',
         ]);
 
-        // Create the order for the customer
+        // Create the order for the selected user
         $order = Order::create([
-            'customer_id' => $request->customer_id,
-            'status' => 'ordered',  // Set initial status to 'ordered'
+            'user_id' => $validated['user_id'],
+            'status' => 'ordered',
         ]);
 
-        // Attach products to the order with quantities
-        foreach ($request->product_ids as $index => $product_id) {
-            $order->products()->attach($product_id, [
-                'quantity' => $request->quantities[$index],
-                'price' => Product::find($product_id)->price,
+        foreach ($validated['products'] as $productData) {
+            $order->products()->attach($productData['product_id'], [
+                'quantity' => $productData['quantity'],
+                'price' => Product::find($productData['product_id'])->price,
             ]);
         }
 
-        return redirect()->route('call-center')->with('success', 'Order created successfully');
+        $trackingNumber = strtoupper('TRK-' . strtoupper(uniqid()));
+
+        $order->tracking_number = $trackingNumber;
+        $order->save();
+
+        dd(session()->all());
+
+        return redirect()->route('call-center')
+                         ->with('success', 'Order placed successfully! Tracking Number: ' . $trackingNumber);
     }
 }

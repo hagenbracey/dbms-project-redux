@@ -16,9 +16,10 @@ Route::get('/dashboard', function () {
 Route::get('/customer-service', [CustomerServiceController::class, 'index'])->name('customer-service');
 Route::post('/customer-service/search', [CustomerServiceController::class, 'search'])->name('customer-service.search');
 
-
-Route::get('/call-center', [CallCenterController::class, 'index'])->name('call-center');
-Route::post('/call-center/order', [CallCenterController::class, 'createOrder'])->name('call-center.create-order');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/call-center', [CallCenterController::class, 'index'])->name('call-center');
+    Route::post('/call-center/order', [CallCenterController::class, 'storeOrder'])->name('call-center.store-order');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
