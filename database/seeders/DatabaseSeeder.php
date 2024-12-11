@@ -7,6 +7,9 @@ use App\Models\User;
 use App\Models\Bundle;
 use App\Models\Payment;
 use App\Models\Order;
+use App\Models\Store;
+use App\Models\Warehouse;
+use App\Models\Inventory;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Brick\Math\BigInteger;
 use Illuminate\Database\Seeder;
@@ -27,7 +30,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // products
-        Product::factory(100)->create();
+        Product::factory(1000)->create();
 
         Product::factory()->create([
             'name' => 'Product Name',
@@ -38,7 +41,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // bundles
-        Bundle::factory(10)->create()->each(function ($bundle) {
+        Bundle::factory(010)->create()->each(function ($bundle) {
             $bundle->products()->attach(
                 Product::inRandomOrder()->take(rand(3, 5))->pluck('id')
             );
@@ -55,7 +58,7 @@ class DatabaseSeeder extends Seeder
         );
 
         // payments
-        User::factory(10)->has(Payment::factory())->create();
+        User::factory(100)->has(Payment::factory())->create();
 
         $user = User::factory()->create([
             'name' => 'John Doe',
@@ -71,17 +74,23 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // orders
-        Order::factory(10)->create()->each(function ($order) {
-            // Attach random products to the order with quantity and price in the pivot table
+        Order::factory(1000)->create()->each(function ($order) {
             $order->products()->attach(
                 Product::inRandomOrder()->take(rand(3, 5))->pluck('id')
-                ->mapWithKeys(function ($id) use ($order) {
-                    // Attach quantity and price for each product
-                    return [$id => ['quantity' => rand(1, 3), 'price' => Product::find($id)->price]];
-                })
+                    ->mapWithKeys(function ($id) use ($order) {
+                        return [$id => ['quantity' => rand(1, 3), 'price' => Product::find($id)->price]];
+                    })
             );
         });
-        
 
+        // warehouses
+        Warehouse::factory(1000)
+        ->has(Inventory::factory()->count(100), 'inventories')
+        ->create();
+        
+        // stores
+        Store::factory(1000)
+            ->has(Inventory::factory()->count(100), 'inventories')
+            ->create();
     }
 }

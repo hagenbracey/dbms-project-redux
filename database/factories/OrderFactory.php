@@ -5,7 +5,7 @@ namespace Database\Factories;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
-use App\Models\Payment; // Make sure Payment model is included
+use App\Models\Payment;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -28,7 +28,8 @@ class OrderFactory extends Factory
             'status' => $this->faker->word(),
             'address' => $this->faker->address(),
             'tracking_number' => $this->faker->uuid(),
-            'payment_id' => Payment::factory(), // Add a payment_id for the order
+            'payment_id' => Payment::factory(),
+            'date_ordered' => $this->faker->dateTimeBetween('-1 year', 'now'), 
         ];
     }
 
@@ -48,8 +49,8 @@ class OrderFactory extends Factory
                 $order->products()->attach(
                     $product->id, 
                     [
-                        'quantity' => rand(1, 3),  // Random quantity between 1 and 3
-                        'price' => $product->price // Price from the product model
+                        'quantity' => rand(1, 3),
+                        'price' => $product->price
                     ]
                 );
             });
