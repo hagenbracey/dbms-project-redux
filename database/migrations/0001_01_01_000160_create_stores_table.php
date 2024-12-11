@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->text('address')->nullable();
-            $table->string('state', 2); // Use a 2-character field for the state abbreviation
+            $table->string('state', 2);
             $table->timestamps();
         });
     }

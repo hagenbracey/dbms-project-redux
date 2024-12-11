@@ -137,7 +137,7 @@ To run them:
 
 6.  Find those packages that were not delivered within the promised time.
 
-    a. find-late-packages.sql // come back to this hagen
+    a. find-late-packages.sql
 
 
 7.  Generate the bill for each customer for the past month.

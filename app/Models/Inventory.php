@@ -9,11 +9,14 @@ class Inventory extends Model
 {
     use HasFactory;
 
-    /**
-     * Get the parent inventoryable model (store, warehouse, etc.).
-     */
-    public function inventoryable()
+    public function product()
     {
-        return $this->morphTo();
+        return $this->belongsTo(Product::class);
     }
+
+    public function store()
+    {
+        return $this->belongsTo(Store::class);
+    }
+
 }

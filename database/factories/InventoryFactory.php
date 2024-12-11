@@ -4,18 +4,22 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Product;
+use App\Models\Store;
 
 class InventoryFactory extends Factory
 {
     protected $model = \App\Models\Inventory::class;
 
+    // InventoryFactory
+// InventoryFactory
     public function definition()
     {
         return [
-            'inventoryable_id' => null, // Set dynamically in tests or seeders
-            'inventoryable_type' => null, // Set dynamically in tests or seeders
             'product_id' => Product::factory(),
-            'quantity' => $this->faker->numberBetween(0, 100),
+            'inventoryable_type' => 'App\Models\Store',
+            'inventoryable_id' => Store::factory(),
+            'quantity' => $this->faker->numberBetween(1, 100),
         ];
     }
+
 }

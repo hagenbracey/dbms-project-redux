@@ -1,7 +1,7 @@
 WITH original_order AS (
     SELECT o.customer_id, o.payment_id, o.address
     FROM orders o
-    WHERE o.tracking_number = '1dd20246-96bd-39b8-b8fb-3b36d0f60904'
+    WHERE o.tracking_number = '7f047720-ce40-34d8-bdee-f7a68a3f4212'
 	/* replace that tracking number with one you generated when seeding */
 ),
 new_order AS (
@@ -15,5 +15,5 @@ SELECT new_order.id, op.product_id, op.quantity, op.price
 FROM order_products op
 JOIN orders o ON op.order_id = o.id
 JOIN new_order ON TRUE
-WHERE o.tracking_number = '1dd20246-96bd-39b8-b8fb-3b36d0f60904';
+WHERE o.tracking_number = '7f047720-ce40-34d8-bdee-f7a68a3f4212';
 /* replace that tracking number with one you generated when seeding */

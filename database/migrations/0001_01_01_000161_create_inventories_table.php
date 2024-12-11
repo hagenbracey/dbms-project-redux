@@ -12,15 +12,13 @@ return new class extends Migration {
     {
         Schema::create('inventories', function (Blueprint $table) {
             $table->id();
-            $table->morphs('inventoryable'); // Polymorphic fields: inventoryable_type, inventoryable_id
-            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
-            $table->bigInteger('quantity')->default(0);
+            $table->unsignedBigInteger('store_id')->nullable();
+            $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
+            $table->foreignId('product_id')->constrained()->onDelete('cascade');
+            $table->integer('quantity');
             $table->timestamps();
-
-            $table->unique(['inventoryable_type', 'inventoryable_id', 'product_id']);
         });
     }
-
     /**
      * Reverse the migrations.
      */

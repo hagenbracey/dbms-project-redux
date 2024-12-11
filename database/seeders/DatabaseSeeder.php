@@ -2,17 +2,16 @@
 
 namespace Database\Seeders;
 
-use App\Models\Product;
-use App\Models\User;
-use App\Models\Bundle;
-use App\Models\Payment;
-use App\Models\Order;
-use App\Models\Store;
-use App\Models\Warehouse;
-use App\Models\Inventory;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Brick\Math\BigInteger;
 use Illuminate\Database\Seeder;
+
+use App\Models\Bundle;
+use App\Models\Inventory;
+use App\Models\Order;
+use App\Models\Payment;
+use App\Models\Product;
+use App\Models\Store;
+use App\Models\User;
+use App\Models\Warehouse;
 
 class DatabaseSeeder extends Seeder
 {
@@ -22,26 +21,43 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // users
-        User::factory(100)->create();
+        User::factory(50)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        $products = Product::factory(100)->create();
+        // stores and warehouses
+        $stores = Store::factory(100)->create();
+        $warehouses = Warehouse::factory(5)->create();
 
-        // products
-        Product::factory(1000)->create();
-
-        Product::factory()->create([
-            'name' => 'Product Name',
-            'type' => 'PC Component',
-            'description' => 'This is a wonderful PC component!',
-            'price' => 229.99,
-            'manufacturer' => 'Radeon',
-        ]);
+        $stores->each(function ($store) use ($products) {
+            $products->each(function ($product) use ($store) {
+                if ($store->state === 'CA') {
+                    Inventory::create([
+                        'product_id' => $product->id,
+                        'store_id' => $store->id,
+                        'quantity' => 0,
+                    ]);
+                } else {
+                    Inventory::create([
+                        'product_id' => $product->id,
+                        'store_id' => $store->id,
+                        'quantity' => rand(0, 100),
+                    ]);
+                }
+            });
+        });
+        $warehouses->each(function ($warehouse) use ($products) {
+            $products->each(function ($product) use ($warehouse) {
+                // inventory entries for each product and store pair
+                Inventory::create([
+                    'product_id' => $product->id,
+                    'store_id' => $warehouse->id,
+                    'quantity' => rand(1, 100),
+                ]);
+            });
+        });
 
         // bundles
-        Bundle::factory(010)->create()->each(function ($bundle) {
+        Bundle::factory(20)->create()->each(function ($bundle) {
             $bundle->products()->attach(
                 Product::inRandomOrder()->take(rand(3, 5))->pluck('id')
             );
@@ -58,7 +74,7 @@ class DatabaseSeeder extends Seeder
         );
 
         // payments
-        User::factory(100)->has(Payment::factory())->create();
+        User::factory(10)->has(Payment::factory())->create();
 
         $user = User::factory()->create([
             'name' => 'John Doe',
@@ -74,23 +90,20 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // orders
-        Order::factory(1000)->create()->each(function ($order) {
+        $statuses = ['late', 'delivered', 'canceled', 'shipped', 'ordered'];
+
+        Order::factory(100)->create()->each(function ($order) use ($statuses) {
+            // attach products to order
             $order->products()->attach(
                 Product::inRandomOrder()->take(rand(3, 5))->pluck('id')
                     ->mapWithKeys(function ($id) use ($order) {
                         return [$id => ['quantity' => rand(1, 3), 'price' => Product::find($id)->price]];
                     })
             );
-        });
 
-        // warehouses
-        Warehouse::factory(1000)
-        ->has(Inventory::factory()->count(100), 'inventories')
-        ->create();
-        
-        // stores
-        Store::factory(1000)
-            ->has(Inventory::factory()->count(100), 'inventories')
-            ->create();
+            $order->update([
+                'status' => $statuses[array_rand($statuses)],
+            ]);
+        });
     }
 }

@@ -9,11 +9,11 @@ class Store extends Model
 {
     use HasFactory;
 
-    /**
-     * Get all of the store's inventories.
-     */
     public function inventories()
     {
-        return $this->morphMany(Inventory::class, 'inventoryable');
+        return $this->hasMany(Inventory::class);
     }
+
+
+
 }
