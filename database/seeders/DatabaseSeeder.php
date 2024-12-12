@@ -9,6 +9,7 @@ use App\Models\Inventory;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Models\Product;
+use App\Models\Shipment;
 use App\Models\Store;
 use App\Models\User;
 use App\Models\Warehouse;
@@ -104,6 +105,22 @@ class DatabaseSeeder extends Seeder
             $order->update([
                 'status' => $statuses[array_rand($statuses)],
             ]);
+        });
+
+        // shipments
+        Shipment::factory(50)->create()->each(function ($shipment) {
+            // Attach products to the shipment
+            $shipment->products()->attach(
+                Product::inRandomOrder()->take(rand(3, 5))->pluck('id')
+                    ->mapWithKeys(function ($id) use ($shipment) {
+                        return [
+                            $id => [
+                                'quantity' => rand(1, 10),
+                                'price' => Product::find($id)->price,
+                            ]
+                        ];
+                    })
+            );
         });
     }
 }

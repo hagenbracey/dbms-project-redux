@@ -35,7 +35,4 @@ class Product extends Model
     {
         return $this->hasMany(Inventory::class);
     }
-
-
-
 }

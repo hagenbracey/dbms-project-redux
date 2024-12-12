@@ -24,6 +24,14 @@
                     </a>
                 </div>
 
+                <!-- shipments -->
+                <div class="bg-blue-950 text-white p-6 rounded-lg shadow-lg hover:bg-green-600 transition">
+                    <a href="{{ route('shipments') }}" class="block text-center">
+                        <h3 class="text-lg font-semibold">Shipments</h3>
+                        <p class="mt-2">Click here for more info.</p>
+                    </a>
+                </div>
+
             </div>
         </div>
     </div>

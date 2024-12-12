@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
 use App\Models\Store;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CustomerServiceController extends Controller
 {
@@ -16,27 +16,33 @@ class CustomerServiceController extends Controller
 
     public function search(Request $request)
     {
-        $stores = Store::all();
-        $query = Product::query();
+        $stores = Store::all(); // Get all stores for the dropdown
 
-        // product name
-        if ($request->has('product_name') && $request->input('product_name') != '') {
-            $query->where('name', 'like', '%' . $request->input('product_name') . '%');
-        }
+        $sql = "SELECT DISTINCT p.id AS product_id, s.name AS store_name, p.name AS product_name, i.quantity
+                FROM inventories i
+                JOIN products p ON i.product_id = p.id
+                JOIN stores s ON i.store_id = s.id";
 
-        // store
         if ($request->has('store_id') && $request->input('store_id') != '') {
-            $query->whereHas('inventories', function ($query) use ($request) {
-                $query->where('store_id', $request->input('store_id'));
-            });
+            $storeId = $request->input('store_id');
+            $sql .= " WHERE i.store_id = :store_id";
         }
 
-        $products = $query->with(['inventories.store'])->take(10)->get();
+        if ($request->has('product_name') && $request->input('product_name') != '') {
+            $productName = $request->input('product_name');
+            $sql .= " AND p.name LIKE :product_name";
+        }
 
-        \Log::info('Products and Inventories:', [
-            'products' => $products,
-            'inventories' => $products->pluck('inventories')->flatten()
-        ]);
+        $bindings = [];
+        if (isset($storeId)) {
+            $bindings['store_id'] = $storeId;
+        }
+        if (isset($productName)) {
+            $bindings['product_name'] = '%' . $productName . '%';
+        }
+
+        $products = DB::select($sql, $bindings);
+        $products = collect($products);
 
         return view('customer-service', compact('products', 'stores'));
     }

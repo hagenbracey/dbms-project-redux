@@ -19,7 +19,7 @@ return new class extends Migration
             $table->timestamp('date_ordered')->useCurrent();
             $table->string('status');
             $table->text('address');
-            $table->string('tracking_number');
+            $table->string('tracking_number')->unique();
             $table->timestamps();
         });
     }

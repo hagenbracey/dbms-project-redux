@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Product;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CallCenterController extends Controller
 {
@@ -19,6 +20,8 @@ class CallCenterController extends Controller
 
     public function storeOrder(Request $request)
     {
+        Log::info('storeOrder method was called');  // Add this line to confirm the method is called.
+
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
             'products' => 'required|array',
@@ -26,12 +29,13 @@ class CallCenterController extends Controller
             'products.*.quantity' => 'required|integer|min:1',
         ]);
 
-        // Create the order for the selected user
+        // Create the order
         $order = Order::create([
             'user_id' => $validated['user_id'],
             'status' => 'ordered',
         ]);
 
+        // Attach products to the order
         foreach ($validated['products'] as $productData) {
             $order->products()->attach($productData['product_id'], [
                 'quantity' => $productData['quantity'],
@@ -39,14 +43,19 @@ class CallCenterController extends Controller
             ]);
         }
 
-        $trackingNumber = strtoupper('TRK-' . strtoupper(uniqid()));
+        try {
+            $trackingNumber = strtoupper('TRK-' . strtoupper(uniqid()));
+            Log::info('Generated tracking number: ' . $trackingNumber);
+            $order->tracking_number = $trackingNumber;
+            $order->save();
+        } catch (\Exception $e) {
+            Log::error('Error generating tracking number: ' . $e->getMessage());
+        }
 
-        $order->tracking_number = $trackingNumber;
-        $order->save();
 
-        dd(session()->all());
 
+        // Redirect with success message
         return redirect()->route('call-center')
-                         ->with('success', 'Order placed successfully! Tracking Number: ' . $trackingNumber);
+            ->with('success', 'Order placed successfully! Tracking Number: ' . $trackingNumber);
     }
 }

@@ -1,5 +1,3 @@
-<!-- resources/views/call-center/index.blade.php -->
-
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
@@ -13,10 +11,9 @@
 
             <!-- Display success message with tracking number -->
             @if(session('success'))
-                <div class="bg-green-200 text-green-800 p-4 rounded-md">
-                    {{ session('success') }}
-                </div>
+            <div class="alert alert-success">{{ session('success') }}</div>
             @endif
+
 
             <!-- User Selection and Order Form -->
             <form action="{{ route('call-center.store-order') }}" method="POST">
@@ -28,11 +25,11 @@
                         <select name="user_id" id="user_id" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
                             <option value="">Select a user</option>
                             @foreach($users as $user)
-                                <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
+                            <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
                             @endforeach
                         </select>
                         @error('user_id')
-                            <div class="text-red-600 text-sm">{{ $message }}</div>
+                        <div class="text-red-600 text-sm">{{ $message }}</div>
                         @enderror
                     </div>
 
@@ -40,14 +37,20 @@
                     <div>
                         <h4 class="text-sm font-medium text-gray-700">Select Products</h4>
                         @foreach($products as $product)
-                            <div class="flex items-center space-x-4 mt-2">
-                                <input type="checkbox" name="products[{{ $product->id }}][product_id]" value="{{ $product->id }}" class="form-checkbox">
-                                <label class="text-white">{{ $product->name }} ({{"$". $product->price }})</label>
-                                <input type="number" name="products[{{ $product->id }}][quantity]" value="1" class="w-16 border border-gray-300 rounded-md px-2 py-1">
-                            </div>
+                        <div class="flex items-center space-x-4 mt-2">
+                            <!-- Add an input that will only be sent if the checkbox is checked -->
+                            <input type="checkbox" name="products[{{ $product->id }}][product_id]" value="{{ $product->id }}" class="form-checkbox"
+                                @if(old('products.' . $product->id . '.product_id')) checked @endif>
+
+                            <label class="text-white">{{ $product->name }} ({{"$". $product->price }})</label>
+
+                            <!-- Quantity Input -->
+                            <input type="number" name="products[{{ $product->id }}][quantity]" value="{{ old('products.' . $product->id . '.quantity', 0) }}"
+                                class="w-16 border border-gray-300 rounded-md px-2 py-1">
+                        </div>
                         @endforeach
                         @error('products')
-                            <div class="text-red-600 text-sm">{{ $message }}</div>
+                        <div class="text-red-600 text-sm">{{ $message }}</div>
                         @enderror
                     </div>
 
