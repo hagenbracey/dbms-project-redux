@@ -21,7 +21,6 @@ class PaymentFactory extends Factory
             'cvv' => $this->faker->numberBetween(100, 999),
             'expiration_date' => $this->faker->creditCardExpirationDateString(),
             'zip_code' => $this->faker->postcode(),
-            'user_id' => User::factory(),
         ];
     }
 }

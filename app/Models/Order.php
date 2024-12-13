@@ -18,20 +18,17 @@ class Order extends Model
         'tracking_number',
     ];
 
-    // Many to Many relationship with Products
     public function products()
     {
         return $this->belongsToMany(Product::class, 'order_products', 'order_id', 'product_id')
             ->withPivot('quantity', 'price');
     }
 
-    // Belongs to relationship with User (Customer)
     public function user()
     {
         return $this->belongsTo(User::class, 'customer_id');
     }
 
-    // Belongs to relationship with Payment
     public function payment()
     {
         return $this->belongsTo(Payment::class);

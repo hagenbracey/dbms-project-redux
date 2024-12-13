@@ -14,7 +14,7 @@ class StoreFactory extends Factory
         return [
             'name' => $this->faker->company(),
             'address' => $this->faker->address(),
-            'state' => $this->faker->stateAbbr(), // Generate valid state abbreviations
+            'state' => $this->faker->stateAbbr(),
             'created_at' => now(),
             'updated_at' => now(),
         ];

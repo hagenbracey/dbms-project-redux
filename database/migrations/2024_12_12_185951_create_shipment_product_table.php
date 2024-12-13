@@ -16,7 +16,7 @@ class CreateShipmentProductTable extends Migration
             $table->foreignId('shipment_id')->constrained('shipments')->onDelete('cascade');
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
             $table->bigInteger('quantity');
-            $table->decimal('price', 7, 2);  // Price of the product at the time of shipment
+            $table->decimal('price', 7, 2);
             $table->primary(['shipment_id', 'product_id']);
             $table->timestamps();
         });

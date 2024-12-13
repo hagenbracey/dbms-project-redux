@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CallCenterController;
 use App\Http\Controllers\CustomerServiceController;
+use App\Http\Controllers\InquireOrdersController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShipmentController;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +29,12 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/shipments', [ShipmentController::class, 'index'])->name('shipments');
     Route::get('/shipments/search', [ShipmentController::class, 'search'])->name('shipments.search');
+});
+
+// orders
+Route::middleware(['auth'])->group(function () {
+    Route::get('/orders', [InquireOrdersController::class, 'index'])->name('orders');
+    Route::get('/orders/search', [InquireOrdersController::class, 'search'])->name('orders.search');
 });
 
 Route::middleware('auth')->group(function () {

@@ -28,7 +28,7 @@ class ShipmentController extends Controller
             $query->where('s.warehouse_id', $request->input('warehouse_id'));
         }
 
-        $shipments = $query->get();  // Fetching the shipments
+        $shipments = $query->get();
 
         return view('shipments.index', compact('shipments', 'warehouses'));
     }

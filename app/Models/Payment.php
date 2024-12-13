@@ -25,7 +25,6 @@ class Payment extends Model
         'zip_code',
     ];
 
-    // One to One relationship with User
     public function user()
     {
         return $this->belongsTo(User::class);

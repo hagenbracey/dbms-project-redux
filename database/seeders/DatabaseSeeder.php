@@ -21,10 +21,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // users
-        User::factory(50)->create();
+        // users and payments
+        $users = User::factory(100)->create();
 
+        $users->each(function ($user) {
+            $payment = Payment::factory()->create([
+                'user_id' => $user->id,
+            ]);
+            $user->update([
+                'payment_id' => $payment->id,
+            ]);
+        });
+
+        // products
         $products = Product::factory(100)->create();
+
         // stores and warehouses
         $stores = Store::factory(100)->create();
         $warehouses = Warehouse::factory(5)->create();
@@ -48,7 +59,6 @@ class DatabaseSeeder extends Seeder
         });
         $warehouses->each(function ($warehouse) use ($products) {
             $products->each(function ($product) use ($warehouse) {
-                // inventory entries for each product and store pair
                 Inventory::create([
                     'product_id' => $product->id,
                     'store_id' => $warehouse->id,
@@ -74,27 +84,10 @@ class DatabaseSeeder extends Seeder
             Product::inRandomOrder()->take(3)->pluck('id')
         );
 
-        // payments
-        User::factory(10)->has(Payment::factory())->create();
-
-        $user = User::factory()->create([
-            'name' => 'John Doe',
-            'email' => 'john@example.com',
-        ]);
-
-        $user->payment()->create([
-            'cardholder' => 'John Doe',
-            'card_number' => '4242424242424242',
-            'cvv' => '123',
-            'expiration_date' => '12/30',
-            'zip_code' => '90210',
-        ]);
-
         // orders
         $statuses = ['late', 'delivered', 'canceled', 'shipped', 'ordered'];
 
         Order::factory(100)->create()->each(function ($order) use ($statuses) {
-            // attach products to order
             $order->products()->attach(
                 Product::inRandomOrder()->take(rand(3, 5))->pluck('id')
                     ->mapWithKeys(function ($id) use ($order) {
@@ -107,9 +100,28 @@ class DatabaseSeeder extends Seeder
             ]);
         });
 
+        $randomOrder = Order::inRandomOrder()->first();
+        if ($randomOrder) {
+            $randomOrder->update([
+                'tracking_number' => '123456',
+                'status' => 'canceled',
+            ]);
+        };
+
+        $orders = Order::all();
+        $payments = Payment::all();
+
+        $orders->each(function ($order) use ($users) {
+            $user = $users->random();
+            $order->update([
+                'customer_id' => $user->id,
+                'payment_id' => $user->payment_id,
+            ]);
+        });
+
+
         // shipments
         Shipment::factory(50)->create()->each(function ($shipment) {
-            // Attach products to the shipment
             $shipment->products()->attach(
                 Product::inRandomOrder()->take(rand(3, 5))->pluck('id')
                     ->mapWithKeys(function ($id) use ($shipment) {

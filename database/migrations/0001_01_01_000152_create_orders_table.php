@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('payment_id')->nullable()->constrained('payments')->onDelete('set null');  // Add the payment_id foreign key
+            $table->foreignId('customer_id')->nullable()->constrained('users')->onDelete('cascade');
+            $table->foreignId('payment_id')->nullable()->constrained('payments')->onDelete('set null');
             $table->decimal('price', 7, 2);
             $table->timestamp('date_ordered')->useCurrent();
             $table->string('status');

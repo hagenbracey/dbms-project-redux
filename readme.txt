@@ -104,12 +104,6 @@ To run them:
     Also, find the contents of that shipment and create a new shipment of replacement
     items.
 
-    **  NOTE: you'll need to get a tracking number from a random order.
-        Use the following query, take a random tracking number, and replace
-        the tracking numbers in the three files with the one you chose:
-        
-        SELECT tracking_number FROM orders;
-
     a. get-customer-from-order.sql
     b. find-products-from-order.sql
     c. create-replacement-shipment.sql

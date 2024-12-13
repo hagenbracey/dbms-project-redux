@@ -27,10 +27,8 @@ class ProductFactory extends Factory
         ];
     }
 
-    // Product Model
     public function inventories()
     {
         return $this->morphMany(Inventory::class, 'inventoryable');
     }
-
 }

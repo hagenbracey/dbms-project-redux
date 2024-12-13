@@ -10,8 +10,6 @@ class InventoryFactory extends Factory
 {
     protected $model = \App\Models\Inventory::class;
 
-    // InventoryFactory
-// InventoryFactory
     public function definition()
     {
         return [
@@ -21,5 +19,4 @@ class InventoryFactory extends Factory
             'quantity' => $this->faker->numberBetween(1, 100),
         ];
     }
-
 }

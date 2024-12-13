@@ -15,7 +15,6 @@ class Bundle extends Model
         'description',
     ];
 
-    // Many to Many relationship with Products
     public function products()
     {
         return $this->belongsToMany(Product::class, 'bundle_products', 'bundle_id', 'product_id');

@@ -10,13 +10,13 @@ class CustomerServiceController extends Controller
 {
     public function index()
     {
-        $stores = Store::all();  // Get all stores for the dropdown
+        $stores = Store::all();
         return view('customer-service', compact('stores'));
     }
 
     public function search(Request $request)
     {
-        $stores = Store::all(); // Get all stores for the dropdown
+        $stores = Store::all();
 
         $sql = "SELECT DISTINCT p.id AS product_id, s.name AS store_name, p.name AS product_name, i.quantity
                 FROM inventories i

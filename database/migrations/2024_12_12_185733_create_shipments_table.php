@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('shipments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('warehouse_id')->constrained('warehouses')->onDelete('cascade');
-            $table->decimal('price', 7, 2);  // The total price of the shipment
+            $table->decimal('price', 7, 2);
             $table->timestamp('date_ordered')->useCurrent();
             $table->enum('status', ['pending', 'shipped', 'delivered'])->default('pending');
-            $table->string('tracking_number')->unique();  // Unique tracking number for each shipment
+            $table->string('tracking_number')->unique();
             $table->timestamps();
         });
     }

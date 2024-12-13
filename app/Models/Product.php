@@ -18,13 +18,11 @@ class Product extends Model
         'manufacturer',
     ];
 
-    // many to many relationship with Bundles
     public function bundles()
     {
         return $this->belongsToMany(Bundle::class, 'bundle_products', 'product_id', 'bundle_id');
     }
 
-    // many to many relationship with Orders
     public function orders()
     {
         return $this->belongsToMany(Order::class, 'order_products', 'product_id', 'order_id')
