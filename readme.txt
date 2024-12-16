@@ -93,11 +93,13 @@ The main dependencies for this project are:
 ----------------
 SQL files are attached for each sample query from the project requirements.
 To run them:
+
 - Open pgAdmin.
 - Right-click your database you made for this project.
 - Left-click "Query Tool".
 - Paste the SQL code from my files to run each query.
 - The files will be listed in the order they need to be ran to fulfill requirements.
+
 
 1.  Assume the package shipped by USPS with tracking number 123456 is reported to
     have been destroyed in an accident. Find the contact information for the customer.
